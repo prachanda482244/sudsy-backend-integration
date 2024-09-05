@@ -7,43 +7,56 @@ import {
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { shop, apiVersion, accessToken } from "../config/constants.js";
+import { ApiError } from "../utils/ApiError.js";
 
 // Express handler for changing credit card details
 const changeCreditCardDetails = asyncHandler(async (req, res) => {
   try {
-    const data = req.body;
+    const {
+      email,
+      card_number,
+      ["expire-date"]: expiryDate,
+      ["security-code"]: securityCode,
+      ["name-card"]: nameCard,
+      firstName,
+      lastName,
+      address1,
+      address2,
+      city,
+      country,
+      province,
+      countryCode,
+      company,
+      phone,
+      zip,
+    } = req.body;
 
-    // const {
-    //   creditCardDetails,
-    //   email,
-    //   shop,
-    //   accessToken,
-    //   apiVersion,
-    //   billingAddress,
-    // } = data;
+    const [month, year] = expiryDate.split("/");
+
+    const fullYear = year.length === 2 ? `20${year}` : year;
 
     const creditCardDetails = {
       credit_card: {
-        number: "4242424242424242",
-        first_name: "Bob",
-        last_name: "Smith",
-        month: "12",
-        year: "2030",
-        verification_value: "999",
+        number: card_number,
+        first_name: firstName,
+        last_name: lastName,
+        month: month,
+        year: fullYear,
+        verification_value: securityCode,
       },
     };
     const billingAddress = {
-      address1: "230 S. Main Street",
-      address2: "",
-      city: "Hecker",
-      province: "Illinois",
-      country: "United States",
-      zip: "62248",
+      address1: address1,
+      address2: address2,
+      city: city,
+      province: province,
+      country: country,
+      zip: zip,
     };
     const sessionId = await getSessionId(creditCardDetails);
 
     const customerId = await getCustomerIdByEmail(
-      "drewcam86@gmail.com",
+      email,
       shop,
       accessToken,
       apiVersion
