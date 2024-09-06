@@ -29,7 +29,7 @@ const changeCreditCardDetails = asyncHandler(async (req, res) => {
       company,
       phone,
       zip,
-    } = JSON.parse(req.body);
+    } = req.body;
     console.log(req.body, "BODY DAtA");
     console.log(expiryDate);
     const [month, year] = expiryDate.split("/");
