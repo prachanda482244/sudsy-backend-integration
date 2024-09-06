@@ -30,7 +30,8 @@ const changeCreditCardDetails = asyncHandler(async (req, res) => {
       phone,
       zip,
     } = req.body;
-
+    console.log(req.body, "BODY DAtA");
+    console.log(expiryDate);
     const [month, year] = expiryDate.split("/");
 
     const fullYear = year.length === 2 ? `20${year}` : year;
